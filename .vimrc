@@ -20,6 +20,8 @@ set autowrite
 
 " deactivate line numbers
 set nonumber
+" active relative numbers
+set relativenumber
 
 " turn col and row position on in bottom right
 set ruler " see ruf for formatting
@@ -66,9 +68,6 @@ set textwidth=80
 
 " replace tabs with spaces automatically
 set expandtab
-
-" disable relative line numbers, remove no to sample it
-set norelativenumber
 
 " makes ~ effectively invisible
 "highlight NonText guifg=bg
@@ -178,6 +177,7 @@ hi vimTodo ctermbg=236 ctermfg=darkred
 hi Todo ctermbg=236 ctermfg=darkred
 hi IncSearch ctermbg=236 cterm=NONE ctermfg=darkred
 hi MatchParen ctermbg=236 ctermfg=darkred
+hi SignColumn ctermbg=darkred
 
 " color overrides
 au FileType * hi StatusLine ctermfg=black ctermbg=cyan
@@ -193,7 +193,7 @@ au FileType * hi vimGlobal ctermfg=black ctermbg=NONE
 au FileType * hi goComment ctermfg=black ctermbg=NONE
 au FileType * hi ErrorMsg ctermbg=234 ctermfg=darkred cterm=NONE
 au FileType * hi Error ctermbg=234 ctermfg=darkred cterm=NONE
-au FileType * hi SpellBad ctermbg=234 ctermfg=darkred cterm=NONE
+au FileType * hi SpellBad ctermbg=234 ctermfg=white cterm=NONE
 au FileType * hi SpellRare ctermbg=234 ctermfg=darkred cterm=NONE
 au FileType * hi Search ctermbg=236 ctermfg=darkred
 au FileType * hi vimTodo ctermbg=236 ctermfg=darkred
@@ -242,6 +242,27 @@ if filereadable(expand("~/vimfiles/autoload/plug.vim"))
 
   call plug#end()
 
+  " Rust-analyzer error color settings
+  hi CocErrorSign ctermbg=NONE ctermfg=white guibg=NONE guifg=white
+  hi CocErrorHighlight cterm=NONE ctermbg=darkred ctermfg=NONE guibg=darkred guifg=NONE
+  " hi CocWarningHighlight ctermfg=Yellow ctermbg=NONE
+  hi CocHintHighlight ctermfg=NONE ctermbg=darkred
+  " hi CocWarningSign ctermfg=blue ctermbg=Yellow
+  " hi CocInfoSign ctermfg=red ctermbg=Blue
+  hi CocHintSign ctermfg=white ctermbg=NONE
+  " hi NormalFloat ctermbg=blue ctermfg=white
+  " hi FloatBorder guifg=darkblue guibg=blue
+  hi CocFloating ctermbg=darkgreen ctermfg=white
+
+  " Set the sign symbols
+  let g:coc_user_config = {
+  \   'diagnostic': {
+  \     'errorSign': '🔥',
+  \     'warningSign': '⚠️',
+  \     'hintSign': '💬',
+  \   }
+  \ }
+
   " pandoc
   let g:pandoc#formatting#mode = 'h' " A'
   let g:pandoc#formatting#textwidth = 72
@@ -262,9 +283,11 @@ if filereadable(expand("~/vimfiles/autoload/plug.vim"))
         \    'html': ['prettier']
         \}
 
+        "'typescript': ['eslint', 'prettier'],
+
+
   " use eslint for ts and js and rust
   let g:ale_linters = {
-        \    'typescript': [ 'eslint' ],
         \    'javascript': [ 'eslint' ],
         \    'rust': ['analyzer']
         \}
@@ -298,6 +321,7 @@ if filereadable(expand("~/vimfiles/autoload/plug.vim"))
 	" Set NERDTree on the right side
 	let g:NERDTreeWinPos = "right"
 	let g:NERDTreeWinSize = 30
+
 
   " Exit Vim if NERDTree is the only window remaining in the only tab.
   autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
@@ -516,11 +540,9 @@ set laststatus=2
 " no select by `"suggest.noselect": true` in your configuration file
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config
-inoremap <silent><expr> <TAB>
-      \ coc#pum#visible() ? coc#pum#next(1) :
-      \ CheckBackspace() ? "\<Tab>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <expr><S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+inoremap <expr><Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr><BS> coc#pum#visible() ? "\<C-e>\<BS>" : "\<BS>"
 
 " }}}
 
