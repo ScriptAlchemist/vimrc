@@ -20,8 +20,8 @@ set autowrite
 
 " deactivate line numbers
 set nonumber
-" active relative numbers
-set relativenumber
+" relative numbers
+set norelativenumber
 
 " turn col and row position on in bottom right
 set ruler " see ruf for formatting
@@ -158,7 +158,7 @@ filetype plugin on
 set background=dark
 
 " base default color changes (gruvbox dark friendly)
-hi StatusLine ctermfg=black ctermbg=NONE
+hi StatusLine ctermfg=white ctermbg=NONE
 hi StatusLineNC ctermfg=black ctermbg=NONE
 hi Normal ctermbg=NONE
 hi Special ctermfg=cyan
@@ -180,7 +180,7 @@ hi MatchParen ctermbg=236 ctermfg=darkred
 hi SignColumn ctermbg=darkred
 
 " color overrides
-au FileType * hi StatusLine ctermfg=black ctermbg=cyan
+au FileType * hi StatusLine ctermfg=white ctermbg=darkcyan
 au FileType * hi StatusLineNC ctermfg=black ctermbg=NONE
 au FileType * hi Normal ctermbg=NONE
 au FileType * hi Special ctermfg=cyan
@@ -193,7 +193,7 @@ au FileType * hi vimGlobal ctermfg=black ctermbg=NONE
 au FileType * hi goComment ctermfg=black ctermbg=NONE
 au FileType * hi ErrorMsg ctermbg=234 ctermfg=darkred cterm=NONE
 au FileType * hi Error ctermbg=234 ctermfg=darkred cterm=NONE
-au FileType * hi SpellBad ctermbg=234 ctermfg=white cterm=NONE
+au FileType * hi SpellBad ctermbg=darkblue ctermfg=white cterm=NONE
 au FileType * hi SpellRare ctermbg=234 ctermfg=darkred cterm=NONE
 au FileType * hi Search ctermbg=236 ctermfg=darkred
 au FileType * hi vimTodo ctermbg=236 ctermfg=darkred
@@ -244,10 +244,10 @@ if filereadable(expand("~/vimfiles/autoload/plug.vim"))
 
   " Rust-analyzer error color settings
   hi CocErrorSign ctermbg=NONE ctermfg=white guibg=NONE guifg=white
-  hi CocErrorHighlight cterm=NONE ctermbg=darkred ctermfg=NONE guibg=darkred guifg=NONE
-  " hi CocWarningHighlight ctermfg=Yellow ctermbg=NONE
-  hi CocHintHighlight ctermfg=NONE ctermbg=darkred
-  " hi CocWarningSign ctermfg=blue ctermbg=Yellow
+  hi CocErrorHighlight cterm=NONE ctermbg=darkgreen ctermfg=NONE
+  " hi CocWarningHighlight ctermfg=blue ctermbg=NONE
+  hi CocHintHighlight ctermfg=NONE ctermbg=darkgreen
+  hi CocWarningSign ctermfg=white ctermbg=NONE
   " hi CocInfoSign ctermfg=red ctermbg=Blue
   hi CocHintSign ctermfg=white ctermbg=NONE
   " hi NormalFloat ctermbg=blue ctermfg=white
@@ -291,6 +291,8 @@ if filereadable(expand("~/vimfiles/autoload/plug.vim"))
         \    'javascript': [ 'eslint' ],
         \    'rust': ['analyzer']
         \}
+  " stop running on markdown files
+  autocmd FileType markdown let b:ale_enabled = 0
 
   " rust
   " let g:ale_linters = {'rust': ['analyzer']}
@@ -410,7 +412,7 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 nnoremap <C-L> :nohl<CR><C-L>
 
 " Type jj to exit insert mode quickly.
-inoremap jj <Esc>
+" inoremap jj <Esc>
 
 " Press the space bar to type the : character in command mode.
 nnoremap <space> :
@@ -542,7 +544,8 @@ set laststatus=2
 " other plugin before putting this into your config
 inoremap <expr><S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 inoremap <expr><Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
-inoremap <expr><BS> coc#pum#visible() ? "\<C-e>\<BS>" : "\<BS>"
+" inoremap <expr><BS> coc#pum#visible() ? "\<C-e>\<BS>" : "\<BS>"
+" stop running on markdown
+autocmd FileType markdown call coc#config('coc.preferences.formatOnType', 0)
 
 " }}}
-
